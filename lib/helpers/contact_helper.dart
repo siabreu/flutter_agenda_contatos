@@ -29,7 +29,7 @@ class ContactHelper {
 
   Future<Database> initDb() async {
     final databasesPath = await getDatabasesPath();
-    final path = join(databasesPath, "contacts.db");
+    final path = join(databasesPath, "contacts2.db");
 
     return await openDatabase(path, version: 1,
         onCreate: (Database db, int newerVersion) async {
@@ -89,6 +89,11 @@ class ContactHelper {
   Future close() async {
     Database dbContact = await db;
     await dbContact.close();
+  }
+
+  Future<void> dropTableIfExistsThenReCreate() async {
+    Database dbContact = await db;
+    await dbContact.execute("DROP TABLE IF EXISTS $contactTable");
   }
 }
 
