@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:agenda_contatos/helpers/contact_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ContactPage extends StatefulWidget {
   final Contact contact;
@@ -62,18 +63,21 @@ class _ContactPageState extends State<ContactPage> {
           child: Column(
             children: <Widget>[
               GestureDetector(
-                child: Container(
-                  width: 140.0,
-                  height: 140.0,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                        image: _editedContact.img != null
-                            ? FileImage(File(_editedContact.img))
-                            : AssetImage("images/person.png")),
+                  child: Container(
+                    width: 140.0,
+                    height: 140.0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: _editedContact.img != null
+                              ? FileImage(File(_editedContact.img))
+                              : AssetImage("images/person.png")),
+                    ),
                   ),
-                ),
-              ),
+                  onTap: () async {
+                    _getImage();
+                  }),
               TextField(
                 controller: _nameController,
                 focusNode: _nameFocus,
@@ -108,6 +112,16 @@ class _ContactPageState extends State<ContactPage> {
         ),
       ),
     );
+  }
+
+  Future _getImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    File _image = File(pickedFile.path);
+
+    setState(() {
+      _editedContact.img = _image.path;
+    });
   }
 
   Future<bool> _requestPop() {

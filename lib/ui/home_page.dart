@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:agenda_contatos/helpers/contact_helper.dart';
 import 'package:agenda_contatos/ui/contact_page.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -75,6 +76,7 @@ class _HomePageState extends State<HomePage> {
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
+                        fit: BoxFit.cover,
                         image: contacts[index].img != null
                             ? FileImage(File(contacts[index].img))
                             : AssetImage("images/person.png"))),
@@ -132,7 +134,11 @@ class _HomePageState extends State<HomePage> {
                             fontSize: 20.0,
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          if (contacts[index].phone.isEmpty)
+                            launch("tel: ${contacts[index].phone}");
+                          Navigator.pop(context);
+                        },
                       ),
                     ),
                     Padding(
